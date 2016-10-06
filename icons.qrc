@@ -1,0 +1,35 @@
+ <!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+        <file>icons/geCache.png</file>
+        <file>icons/contextHelp.png</file>
+        <file>icons/contextHelp_small.png</file>
+        <file>icons/Earth_Icon.png</file>
+        <file>icons/Earth_Icon_small.png</file>
+        <file>icons/Earth_link.png</file>
+        <file>icons/Earth_link_small.png</file>
+        <file>icons/fileopen.png</file>
+        <file>icons/compass_NW.png</file>
+        <file>icons/compass_NE.png</file>
+        <file>icons/compass_SW.png</file>
+        <file>icons/compass_SE.png</file>
+        <file>icons/compass_NW_small.png</file>
+        <file>icons/compass_NE_small.png</file>
+        <file>icons/compass_SW_small.png</file>
+        <file>icons/compass_SE_small.png</file>
+        <file>icons/compass_N.png</file>
+        <file>icons/compass_W.png</file>
+        <file>icons/compass_E.png</file>
+        <file>icons/compass_S.png</file>
+        <file>icons/compass_N_small.png</file>
+        <file>icons/compass_W_small.png</file>
+        <file>icons/compass_E_small.png</file>
+        <file>icons/compass_S_small.png</file>
+        <file>icons/add_poly.png</file>
+        <file>icons/close_poly.png</file>
+        <file>icons/clear_poly.png</file>
+        <file>icons/add_poly_small.png</file>
+        <file>icons/close_poly_small.png</file>
+        <file>icons/clear_poly_small.png</file>
+ </qresource>
+ </RCC>
+

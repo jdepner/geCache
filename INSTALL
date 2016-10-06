@@ -1,0 +1,145 @@
+
+General notes
+*************************
+
+    The geCache program is a Google Earth caching program that will run on 
+Linux and Windows 10.  There are a few Google Earth caching programs for 
+different versions of Windows but, as far as I know, none for Linux.  Until 
+now.  The purpose of this program is to allow you to cache Google Earth data so 
+that you can look at it in Google Earth while offline (for example, out in the 
+middle of the boonies).
+
+    Just one thing before you get into the code - I've never claimed to be a 
+C++ programmer.  Most of what I know I got from the Qt examples.  I've been 
+programming for a living since 1978 and I've made the transition from FORTRAN 
+to C++ via BASIC, COBOL, Pascal, C, Java, a couple of assembly languages, and 
+some other esoteric stuff.  If you think my code looks archaic, there's a good 
+reason for that... I'm old ;-)
+
+
+Installing on Linux
+*************************
+
+    On Linux you'll, obviously, need the gcc compiler.  It's usually just 
+called gcc in whatever tool you use to acquire software.  In Ubuntu you can 
+just type "gcc" on the command line then press Enter.  If you don't have it 
+installed you will be instructed how to install it.
+
+    You will need to install the Qt development packages.  As an example of 
+what you are looking for, on Ubuntu 16.04 the Qt 5 development package is 
+called qt5-default.  On some older distributions you should look for something 
+like libqt5-dev.  Whichever package you install, you need to make sure that the 
+qmake executable for that package is in your PATH.
+
+    I didn't go through the agony of trying to set up the configure/autoconf 
+stuff since I'm really only targeting two operating systems.  In addition, I'm 
+using Qt's qmake program to create the Makefile.  To make it really simple I've 
+made a script that is designed to be run in the bash shell.  The script is 
+called "mklin".  To run it simply open a console (or konsole if you will), cd 
+to the directory containing the source code, then enter:
+
+    ./mklin
+
+This will create the Qt .pro file, create the Makefile, compile and link the 
+code, and produce an executable called geCache in the source directory.  
+You can then move the executable to some location in your path or execute it by 
+entering the full path to the executable on the command line.
+
+
+Installing on Windows
+*************************
+
+    On Windows you'll need to install Visual Studio which will get you the 
+Visual C++ command line complier (cl.exe).  The easy (and free) way to get this 
+is to download and install Visual Studio Community 2015.  You can just search 
+the interwebs for "Visual Studio Community 2015" to find the location from 
+which to download it.  When you install it make sure that you install the 
+command line compiler.
+
+    You will need also to install the Qt 5 development packages.  You can get 
+that here:
+
+    https://www.qt.io/download/
+
+Just answer the questions - geCache is open source licensed under GPLv3, 
+the source is publicly available, and, since you're using GPLv3 licensed source 
+code you have to comply with the obligations of the GPLv3.
+
+    Every Windows system is different.  For mine, I had to add a couple of 
+folders to my Path in Powershell.  To do that you need to create a folder in 
+your Documents folder called WindowsPowerShell.  In that folder you need to 
+create a Powershell script file called Microsoft.PowerShell_profile.ps1.  In 
+that file you'll need something like this:
+
+    set-location c:\users\YOUR_NAME_HERE
+    $env:Path += ";C:\Program Files (x86)\Windows Kits\10\bin\x64"
+    $env:Path += ";C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC"
+    vcvarsall
+
+In my case, the first folder added to the Path is the folder that contains the 
+rc.exe program.  The second one contains the vcvarsall.bat script which has to 
+be run in order to set up the build environment.  These may be in different 
+locations on your system so look for them and change the above lines 
+accordingly.  
+
+    The geCache executable is built using a Powershell script.  To open a 
+Powershell window look in the Start menu under "Windows Powershell" and just 
+run "Windows Powershell".  If you've already built the Powershell profile file 
+as described above the Powershell window should start in your $USERPROFILE 
+folder.  You then need to "cd" to the geCache source folder and open the 
+mkwin.ps1 script with whatever code editor you like to use.  Please note that 
+mkwin.ps1 is the ONLY text file in the source distribution that is in Windows 
+format (each line ends with CR/LF instead of just LF).  This means that, if you 
+look at any other file with, for example, Notepad, you'll see one long line of 
+text.  Source code eitors won't have that problem.  Once you get mkwin.ps1 open 
+in some reasonable editor, take a look at the lines that contain LIBPATHs and 
+INCLUDEPATHs.  The folders on those lines will probably have different names 
+on your system than the ones I have on my system.  The following is a list of 
+the LIBPATH folders followed by the name of one of the library files that I 
+needed from that folder:
+
+    C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x64
+        shell32.lib
+    C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\amd64
+        mscvcrt.lib
+    C:\Program Files (x86)\Windows Kits\10\Lib\10.0.10240.0\ucrt\x64
+        libucrt.lib
+
+You need to make sure that the folder names are correct for your system.  To do 
+that, look in the folders on your system with the same or similar names and 
+find the .lib file.  Replace the folder names in the mkwin.ps1 file as needed.
+
+    The INCLUDEPATH lines are listed below with at least one of the header 
+files that was needed:
+
+    C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include
+        stdint.h
+    C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt
+        inttypes.h
+    C:\Program Files (x86)\Windows Kits\8.1\Include\um
+        windows.h
+    C:\Program Files (x86)\Windows Kits\8.1\Include\shared
+        winapifamily.h
+
+Do the same thing in mkwin.ps1 for these folders that you did for the LIBPATH 
+folders.
+
+    Once you have this set up you can compile and link the program.  To do that 
+you have to run a Powershell script.  Unless you want to set your execution 
+policy to "bypass" for all scripts you will need to run the script like this:
+
+    powershell -executionpolicy bypass -File .\mkwin.ps1
+
+This will create the Qt .pro file, create the Makefile, compile and link the 
+code, and produce an executable called geCache.exe in the "release" 
+folder of the source folder.  You can then move the executable to some location 
+in your path or execute it by entering the full path to the executable on the 
+command line.
+
+
+Use Notes
+*************************
+
+    The first thing you need to do when you run the program is read the 
+information in the About tab.  That will help you get your system set up to run 
+Google Earth.

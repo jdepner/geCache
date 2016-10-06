@@ -1,0 +1,53 @@
+
+
+    The geCache program is a Google Earth caching program that will run on 
+Linux and Windows 10.  There are a few Google Earth caching programs for 
+different versions of Windows but, as far as I know, none for Linux.  Until 
+now.  The purpose of this program is to allow you to cache Google Earth data so 
+that you can look at it in Google Earth while offline (for example, out in the 
+middle of the boonies).
+
+
+Disclaimer
+
+    The geCache program is Copyright (c) 2016 Jan C. Depner 
+(jan@pfmabe.software) and is released (for the most part) under version 3 of 
+the GNU General Public License (GPLv3).
+
+geCache is free software; you can redistribute it and/or modify it under 
+the terms of the GNU General Public License as published by the Free Software 
+Foundation; either version 3 of the License, or (at your option) any later 
+version.
+
+geCache is distributed in the hope that it will be useful, but WITHOUT 
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with 
+this program; if not, write to the Free Software Foundation, Inc., 51 Franklin 
+Street, Fifth Floor, Boston, MA 02110-1301  USA
+
+Although most of this program is licensed under GPLv3 there are a few files 
+that are in the public domain that were written either by myself, by one or 
+more of my co-workers when I worked for the Naval Oceanographic Office, or 
+by someone at NOAA (in FORTRAN, in the dim distant past, and then converted to 
+C).  Those files are:
+
+        qPosfix.cpp
+        qPosfix.hpp
+        functions.c
+        functions.h
+
+
+Each of these files has a statement at the beginning of the file explaining 
+that they are in the public domain.
+
+All of the files in the icons directory are in the public domain with the 
+exception of geCache.png and geCache.ico.  Those are (I guess) GPLv3.
+
+When you acquired geCache you should have received or been allowed to 
+download a copy of the source code for this program along with this README 
+file, a COPYING file containing a text version of the GPLv3, and an INSTALL 
+file.
+
+The INSTALL file has instructions for building and installing geCache.
