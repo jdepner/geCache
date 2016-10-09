@@ -47,5 +47,6 @@
     - Fixed bug when building cache with polygon when first cache sub-area is not
       in the polygon.
     - Fixed second counter bug introduced when switched to half second update.
+    - Cleaned up remaining time calculation.
 
 </pre>*/

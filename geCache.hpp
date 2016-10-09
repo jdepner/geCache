@@ -102,7 +102,7 @@ protected:
 
   uint8_t         build_direction, build_kill_flag, build_start_flag, restart_msg, already_gone, poly_define, poly_edit;
 
-  int32_t         bounds_clicked, x_box_count, iteration_count, poly_edit_index;
+  int32_t         bounds_clicked, x_box_count, boxes_remaining, iteration_count, poly_edit_index;
 
   int64_t         start_timestamp, current_timestamp;
 

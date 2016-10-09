@@ -40,7 +40,6 @@
 #include "geCache.hpp"
 #include "geCacheHelp.hpp"
 
-
 geCache::geCache (QWidget *parent):
   QMainWindow (parent, 0)
 {
@@ -1185,23 +1184,16 @@ geCache::slotGeCacheTimer ()
 
               progress->setValue (iteration_count++);
 
-              int32_t remaining;
 
-              if (misc.poly_flag)
-                {
-                  remaining = misc.total_poly_time - ((iteration_count / 2) * options.cache_update_frequency);
-                }
-              else
-                {
-                  remaining = misc.total_rect_time - ((iteration_count / 2) * options.cache_update_frequency);
-                }
+              boxes_remaining--;
 
-              if (remaining < 0) remaining = 0;
+
+              int32_t remaining = (boxes_remaining + 2) * options.cache_update_frequency;
 
 
               //  Wait twice the update frequency with the box reset to the whole area.
 
-              if (build_kill_flag) remaining = 2 * options.cache_update_frequency;
+              if (build_kill_flag || remaining <= 0) remaining = 2 * options.cache_update_frequency;
 
 
               int32_t hour = remaining / 3600;
@@ -2370,7 +2362,6 @@ geCache::slotBuildCache ()
       computeSize (&misc, &options);
       iteration_count = 0;
 
-
       int32_t hour, minute, second;
 
       if (misc.poly_flag)
@@ -2386,6 +2377,7 @@ geCache::slotBuildCache ()
           second = misc.total_poly_time % 60;
 
           progress->setRange (0, misc.poly_iterations);
+          boxes_remaining = misc.poly_iterations;
         }
       else
         {
@@ -2400,6 +2392,7 @@ geCache::slotBuildCache ()
           second = misc.total_rect_time % 60;
 
           progress->setRange (0, misc.iterations);
+          boxes_remaining = misc.iterations;
         }
 
       progBox->setTitle (tr ("Cache build progress - Estimated time remaining - %1:%2:%3").arg (hour, 2, 10, zero).arg (minute, 2, 10, zero).arg (second, 2, 10, zero));
