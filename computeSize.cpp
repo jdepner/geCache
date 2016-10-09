@@ -179,7 +179,7 @@ void computeSize (MISC *misc, OPTIONS *options)
 
   //  Compute a rough estimate of how long this will take.
 
-  misc->total_rect_time = misc->iterations * options->cache_update_frequency + 60;
+  misc->total_rect_time = misc->iterations * options->cache_update_frequency + 20;
 
 
   int32_t hour = misc->total_rect_time / 3600;
@@ -416,7 +416,7 @@ void computeSize (MISC *misc, OPTIONS *options)
 
       //  Compute a rough estimate of how long this will take.
 
-      misc->total_poly_time = misc->poly_iterations * options->cache_update_frequency + 60;
+      misc->total_poly_time = misc->poly_iterations * options->cache_update_frequency + 20;
 
 
       int32_t hour = misc->total_poly_time / 3600;
