@@ -1091,13 +1091,14 @@ geCache::slotGeCacheTimer ()
         {
           build_start_flag = NVFalse;
 
-          if (misc.second_count >= options.cache_update_frequency)
+          if ((misc.second_count / 2) >= options.cache_update_frequency)
             {
               misc.second_count = -1;
 
               int64_t cache_size = sizeDir (options.ge_dir);
               float size_num = 0;
               QString sizeStr;
+
 
               //  We're too close to the max cache size so we need to offer the user a chance to save cache and continue.
 
@@ -2062,7 +2063,7 @@ geCache::positionBuildGoogleEarth ()
       fprintf (build_ge_tmp_fp[1], "        <color>00000000</color>\n");
 
 
-      //  The last time thought we want to draw the box
+      //  The last time through we want to draw the box
 
       if (build_kill_flag)
         {
