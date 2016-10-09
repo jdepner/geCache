@@ -26,7 +26,7 @@
 
 #ifndef VERSION
 
-#define     VERSION     "PFM Software - geCache V1.00 - 10/01/16"
+#define     VERSION     "PFM Software - geCache V1.01 - 10/09/16"
 
 #endif
 
@@ -34,9 +34,17 @@
 
 
     Version 1.00
-    Jan C. Depner
+    Jan C. Depner (PFM Software)
     10/01/16
 
     First working version.
+
+
+    Version 1.01
+    Jan C. Depner (PFM Software)
+    10/09/16
+
+    Fixed bug when building cache with polygon when first cache sub-area is not
+    in the polygon.
 
 </pre>*/

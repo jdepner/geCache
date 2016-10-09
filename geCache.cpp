@@ -2034,22 +2034,23 @@ geCache::positionBuildGoogleEarth ()
     }
 
 
+  if ((build_ge_tmp_fp[1] = fopen (build_ge_tmp_name[1], "w")) == NULL)
+    {
+      QMessageBox::critical (this, tr ("geCache Google Earth"), tr ("Unable to open temporary Google Earth KML file!"));
+      return (-1);
+    }
+
+
+  fprintf (build_ge_tmp_fp[1], "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+  fprintf (build_ge_tmp_fp[1], "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n");
+  fprintf (build_ge_tmp_fp[1], "  <Document>\n");
+
+
   //  If we're doing a polygon build, we only want to change the file if the current box overlaps the polygon.  The flag will always be 
   //  set to NVTrue for rectangle builds.
 
   if (misc.view_flag)
     {
-      if ((build_ge_tmp_fp[1] = fopen (build_ge_tmp_name[1], "w")) == NULL)
-        {
-          QMessageBox::critical (this, tr ("geCache Google Earth"), tr ("Unable to open temporary Google Earth KML file!"));
-          return (-1);
-        }
-
-
-      fprintf (build_ge_tmp_fp[1], "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-      fprintf (build_ge_tmp_fp[1], "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n");
-      fprintf (build_ge_tmp_fp[1], "  <Document>\n");
-
 
       //  This is the box
 
@@ -2108,11 +2109,12 @@ geCache::positionBuildGoogleEarth ()
       fprintf (build_ge_tmp_fp[1], "        </outerBoundaryIs>\n");
       fprintf (build_ge_tmp_fp[1], "      </Polygon>\n");
       fprintf (build_ge_tmp_fp[1], "    </Placemark>\n");
-      fprintf (build_ge_tmp_fp[1], "  </Document>\n");
-      fprintf (build_ge_tmp_fp[1], "</kml>\n");
-
-      fclose (build_ge_tmp_fp[1]);
     }
+
+  fprintf (build_ge_tmp_fp[1], "  </Document>\n");
+  fprintf (build_ge_tmp_fp[1], "</kml>\n");
+
+  fclose (build_ge_tmp_fp[1]);
 
 
   //  If we set the kill flag the last time, just return;
@@ -2122,6 +2124,7 @@ geCache::positionBuildGoogleEarth ()
 
   do
     {
+DPRINT
       switch (build_direction)
         {
         case 0:

@@ -27,6 +27,10 @@ qmake -o Makefile
 make
 
 
+export DESTINATION=${1:-"."}
+mv geCache $DESTINATION
+
+
 # Get rid of the Makefile so there is no confusion.  It will be generated again the next time we build.
 
 rm Makefile
