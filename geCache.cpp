@@ -2124,7 +2124,6 @@ geCache::positionBuildGoogleEarth ()
 
   do
     {
-DPRINT
       switch (build_direction)
         {
         case 0:
