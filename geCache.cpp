@@ -2635,6 +2635,11 @@ geCache::slotSaveCacheClicked ()
   fd->setFileMode (QFileDialog::AnyFile);
 
 
+  //  If the last used directory still exists, set the directory.
+
+  if (QDir (options.stash_dir).exists ()) fd->setDirectory (QDir (options.stash_dir).absolutePath ());
+
+
   if (fd->exec () == QDialog::Accepted) 
     {
       //  Save the directory that we were in when we selected a directory.
@@ -2722,6 +2727,11 @@ geCache::slotLoadCacheClicked ()
 
 
   fd->setFileMode (QFileDialog::Directory);
+
+
+  //  If the last used directory still exists, set the directory.
+
+  if (QDir (options.stash_dir).exists ()) fd->setDirectory (QDir (options.stash_dir).absolutePath ());
 
 
   if (fd->exec () == QDialog::Accepted) 

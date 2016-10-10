@@ -48,5 +48,6 @@
       in the polygon.
     - Fixed second counter bug introduced when switched to half second update.
     - Cleaned up remaining time calculation.
+    - Save and load cache now open the file dialog in the last used save/load directory.
 
 </pre>*/
