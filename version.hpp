@@ -26,7 +26,7 @@
 
 #ifndef VERSION
 
-#define     VERSION     "PFM Software - geCache V1.01 - 10/09/16"
+#define     VERSION     "PFM Software - geCache V1.02 - 04/25/17"
 
 #endif
 
@@ -49,5 +49,15 @@
     - Fixed second counter bug introduced when switched to half second update.
     - Cleaned up remaining time calculation.
     - Save and load cache now open the file dialog in the last used save/load directory.
+
+
+    Version 1.02
+    Jan C. Depner (PFM Software)
+    04/25/17
+
+    - Saves the bounds of the rectangle or polygon to an area file (same name as the saved cache directory plus a .are extension) along 
+      with the saved cache directory.
+    - Loads the bounds of the rectangle or polygon from an area file along with the saved cache directory.  This allows you to reload
+      a cached area, modify the bounds, build the cache, and then save it to the same or a new name.
 
 </pre>*/

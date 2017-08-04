@@ -1765,13 +1765,16 @@ geCache::slotGoogleEarthClicked (bool checked)
       arguments.clear ();
 
 
-      sprintf (ge_tmp_name[0], "geCache_GE_%d_tmp_link.kml", misc.process_id);
-      sprintf (ge_tmp_name[1], "geCache_GE_%d_tmp_look.kml", misc.process_id);
+      QString tmp0 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_link.kml").arg (misc.process_id);
+      QString tmp1 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_look.kml").arg (misc.process_id);
+
+      strcpy (ge_tmp_name[0], tmp0.toLatin1 ());
+      strcpy (ge_tmp_name[1], tmp1.toLatin1 ());
 
 
       if ((ge_tmp_fp[0] = fopen (ge_tmp_name[0], "w")) == NULL)
         {
-          QMessageBox::critical (this, tr ("geCache Google Earth"), tr ("Unable to open temporary Google Earth link file!"));
+          QMessageBox::critical (this, tr ("geCache Google Earth"), tr ("Unable to open temporary Google Earth link file %1!").arg (ge_tmp_name[0]));
           return;
         }
 
@@ -2334,8 +2337,11 @@ geCache::slotBuildCache ()
       arguments.clear ();
 
 
-      sprintf (build_ge_tmp_name[0], "geCache_GE_%d_tmp_build_link.kml", misc.process_id);
-      sprintf (build_ge_tmp_name[1], "geCache_GE_%d_tmp_build_look.kml", misc.process_id);
+      QString tmp0 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_build_link.kml").arg (misc.process_id);
+      QString tmp1 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_build_look.kml").arg (misc.process_id);
+
+      strcpy (build_ge_tmp_name[0], tmp0.toLatin1 ());
+      strcpy (build_ge_tmp_name[1], tmp1.toLatin1 ());
 
 
       if ((build_ge_tmp_fp[0] = fopen (build_ge_tmp_name[0], "w")) == NULL)
@@ -2630,7 +2636,7 @@ geCache::slotSaveCacheClicked ()
   QFileDialog *fd = new QFileDialog (this, tr ("geCache Save cache"));
   fd->setViewMode (QFileDialog::List);
   fd->setOption (QFileDialog::DontUseNativeDialog, true);
-
+  fd->setOption (QFileDialog::ShowDirsOnly, true);
 
   fd->setFileMode (QFileDialog::AnyFile);
 
@@ -2642,10 +2648,6 @@ geCache::slotSaveCacheClicked ()
 
   if (fd->exec () == QDialog::Accepted) 
     {
-      //  Save the directory that we were in when we selected a directory.
-
-      options.stash_dir = fd->directory ().absolutePath ();
-
       QStringList files = fd->selectedFiles ();
 
       QString file = files.at (0);
@@ -2657,17 +2659,9 @@ geCache::slotSaveCacheClicked ()
         }
 
 
-      QString save_dir = QFileInfo (file).absoluteFilePath ();
-      if (QDir (save_dir).exists ())
-        {
-          if (!QFileInfo (save_dir).isDir ())
-            {
-              QMessageBox::warning (this, tr ("geCache Save cache"), tr ("Output must be a directory, not a file."));
-              return;
-            }
+      QString save_dir = file;
 
-          QDir (save_dir).removeRecursively ();
-        }
+      if (QDir (save_dir).exists ()) QDir (save_dir).removeRecursively ();
 
 
       //  Copy the Google Earth cache directory.
@@ -2702,11 +2696,50 @@ geCache::slotSaveCacheClicked ()
 
 #endif
 
+      //  Save the directory that we were in when we selected a directory.
+
+      options.stash_dir = fd->directory ().absolutePath ();
+
 
       qApp->setOverrideCursor (Qt::WaitCursor);
       qApp->processEvents ();
 
       copyDir (options.ge_dir, save_dir);
+
+
+      //  Save the rectangle or polygon to the area file.
+
+      FILE *fp;
+      char fname[1024];
+      strcpy (fname, file.append (".are").toLatin1 ());
+
+      if ((fp = fopen (fname, "w")) == NULL)
+        {
+          QMessageBox::warning (this, tr ("geCache Error"), tr ("Cannot open area file %1").arg (file));
+          return;
+        }
+
+      if (options.shape_tab == POLY_TAB && options.polygon.size ())
+        {
+          for (uint32_t i = 0 ; i < options.polygon.size () ; i++)
+            {
+              //  Make sure we haven't created any duplicate points
+
+              if (i && options.polygon[i].x == options.polygon[i - 1].x && options.polygon[i].y == options.polygon[i - 1].y) continue;
+
+              fprintf (fp, "%.11f, %.11f\n", options.polygon[i].y, options.polygon[i].x);
+            }
+        }
+      else
+        {
+          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.min_y, options.cache_mbr.min_x);
+          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.max_y, options.cache_mbr.min_x);
+          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.max_y, options.cache_mbr.max_x);
+          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.min_y, options.cache_mbr.max_x);
+        }
+
+      fclose (fp);
+
 
       qApp->restoreOverrideCursor ();
     }
@@ -2725,7 +2758,6 @@ geCache::slotLoadCacheClicked ()
   fd->setOption (QFileDialog::DontUseNativeDialog, true);
   fd->setOption (QFileDialog::ShowDirsOnly, true);
 
-
   fd->setFileMode (QFileDialog::Directory);
 
 
@@ -2734,17 +2766,150 @@ geCache::slotLoadCacheClicked ()
   if (QDir (options.stash_dir).exists ()) fd->setDirectory (QDir (options.stash_dir).absolutePath ());
 
 
-  if (fd->exec () == QDialog::Accepted) 
+  if (fd->exec () == QDialog::Accepted)
     {
-      //  Save the directory that we were in when we selected a directory.
-
-      options.stash_dir = fd->directory ().absolutePath ();
-
       QStringList files = fd->selectedFiles ();
 
       QString file = files.at (0);
 
+
       if (file.isEmpty ()) file = fd->directory ().absolutePath ();
+
+
+      //  Save the parent directory of the selected directory as the stash directory.
+
+      options.stash_dir = QFileInfo (file).dir ().absolutePath ();
+
+
+      QString load_dir = file;
+
+
+      //  Since version 1.02 geCache writes an area file that is associated with the saved cache directory.  If one is there, we need to 
+      //  read it and get the rectangle or polygon from the area file.
+
+      FILE *fp;
+      char fname[1024], str[128];
+      strcpy (fname, file.append (".are").toLatin1 ());
+
+      if ((fp = fopen (fname, "r")) != NULL)
+        {
+          options.polygon.clear ();
+          while (fgets (str, sizeof (str), fp) != NULL)
+            {
+              double lat_degs, lon_degs;
+
+              sscanf (str, "%lf, %lf", &lat_degs, &lon_degs);
+
+              NV_F64_COORD2 pnt = {lon_degs, lat_degs};
+              options.polygon.push_back (pnt);
+            }
+
+
+          uint8_t rect_flag = NVFalse;
+
+          if (options.polygon.size () == 4)
+            {
+              double ulat[4], ulon[4];
+              int32_t lat_count = 0, lon_count = 0;
+
+              for (int32_t j = 0 ; j < 4 ; j++)
+                {
+                  uint8_t unique = NVTrue;
+
+                  for (int32_t k = 0 ; k < lat_count ; k++)
+                    {
+                      if (options.polygon[j].y == ulat[k])
+                        {
+                          unique = NVFalse;
+                          break;
+                        }
+                    }
+
+                  if (unique)
+                    {
+                      ulat[lat_count] = options.polygon[j].y;
+                      lat_count++;
+                    }
+
+
+                  unique = NVTrue;
+                  for (int32_t k = 0 ; k < lon_count ; k++)
+                    {
+                      if (options.polygon[j].x == ulon[k])
+                        {
+                          unique = NVFalse;
+                          break;
+                        }
+                    }
+
+                  if (unique)
+                    {
+                      ulon[lon_count] = options.polygon[j].x;
+                      lon_count++;
+                    }
+                }
+
+
+              //  If there are only two unique latitudes and two unique longitudes then this is a rectangle.
+
+              if (lat_count == 2 && lon_count == 2) rect_flag = NVTrue;
+            }
+
+          fclose (fp);
+
+
+          options.cache_mbr.min_y = 99999999999.0;
+          options.cache_mbr.min_x = 99999999999.0;
+          options.cache_mbr.max_y = -99999999999.0;
+          options.cache_mbr.max_x = -99999999999.0;
+    
+          for (uint32_t i = 0 ; i < options.polygon.size () ; i++)
+            {
+              if (options.polygon[i].y < options.cache_mbr.min_y) options.cache_mbr.min_y = options.polygon[i].y;
+              if (options.polygon[i].y > options.cache_mbr.max_y) options.cache_mbr.max_y = options.polygon[i].y;
+              if (options.polygon[i].x < options.cache_mbr.min_x) options.cache_mbr.min_x = options.polygon[i].x;
+              if (options.polygon[i].x > options.cache_mbr.max_x) options.cache_mbr.max_x = options.polygon[i].x;
+            }
+
+
+          double deg, min, sec;
+          char hem;
+
+          QString ltstring = qFixpos (options.cache_mbr.max_y, &deg, &min, &sec, &hem, QPOS_LAT, options.position_form);
+          north->setText (ltstring);
+          ltstring = qFixpos (options.cache_mbr.min_y, &deg, &min, &sec, &hem, QPOS_LAT, options.position_form);
+          south->setText (ltstring);
+          QString lnstring = qFixpos (options.cache_mbr.max_x, &deg, &min, &sec, &hem, QPOS_LON, options.position_form);
+          east->setText (lnstring);
+          lnstring = qFixpos (options.cache_mbr.min_x, &deg, &min, &sec, &hem, QPOS_LON, options.position_form);
+          west->setText (lnstring);
+
+
+          vertices->clear ();
+
+
+          if (rect_flag)
+            {
+              options.polygon.clear ();
+              options.shape_tab = RECT_TAB;
+            }
+          else
+            {
+              //  Populate the polygon vertices if any were saved and restored.
+
+              for (uint32_t i = 0 ; i < options.polygon.size () ; i++)
+                {
+                  ltstring = qFixpos (options.polygon[i].y, &deg, &min, &sec, &hem, QPOS_LAT, options.position_form);
+                  lnstring = qFixpos (options.polygon[i].x, &deg, &min, &sec, &hem, QPOS_LON, options.position_form);
+                  vertices->addItem (ltstring + " " + lnstring);
+                }
+
+              options.shape_tab = POLY_TAB;
+            }
+
+
+          shapeTab->setCurrentIndex (options.shape_tab);
+        }
 
 
       //  Remove the Google Earth cache directory.
@@ -2781,8 +2946,6 @@ geCache::slotLoadCacheClicked ()
 
       QDir (options.ge_dir).removeRecursively ();
 
-
-      QString load_dir = QFileInfo (file).absoluteFilePath ();
 
       qApp->setOverrideCursor (Qt::WaitCursor);
       qApp->processEvents ();
