@@ -32,13 +32,12 @@ double settings_version = 1.00;
 
 /*!
   These functions store and retrieve the program settings (environment) from a .ini file.  On both Linux and Windows
-  the file will be called geCache.ini and will be stored in a directory called ABE.config.  On Linux, the
-  ABE.config directory will be stored in your $HOME directory.  On Windows, it will be stored in your $USERPROFILE
-  folder.  If you make a change to the way a variable is used and you want to force the defaults to be restored just
-  change the settings_version to a newer number (I've been using the program version number from version.hpp - which
-  you should be updating EVERY time you make a change to the program!).  You don't need to change the
-  settings_version though unless you want to force the program to go back to the defaults (which can annoy your
-  users).  So, the settings_version won't always match the program version.
+  the file will be called geCache.ini.  On Linux, the file will be stored in your $HOME directory.  On Windows, it
+  will be stored in your $USERPROFILE folder.  If you make a change to the way a variable is used and you want to
+  force the defaults to be restored just change the settings_version to a newer number (I've been using the program
+  version number from version.hpp - which you should be updating EVERY time you make a change to the program!).  You
+  don't need to change the settings_version though unless you want to force the program to go back to the defaults
+  (which can annoy your users).  So, the settings_version won't always match the program version.
 */
 
 uint8_t envin (OPTIONS *options)
