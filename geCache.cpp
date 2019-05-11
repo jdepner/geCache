@@ -2709,6 +2709,10 @@ geCache::slotSaveCacheClicked ()
 
       //  Save the rectangle or polygon to the area file.
 
+      QString areaName = QFileInfo (file).baseName ();
+      char area_name[256];
+      strcpy (area_name, areaName.toLatin1 ());
+
       FILE *fp;
       char fname[1024];
       strcpy (fname, file.append (".are").toLatin1 ());
@@ -2740,6 +2744,89 @@ geCache::slotSaveCacheClicked ()
 
       fclose (fp);
 
+
+      //  Save the rectangle or polygon to the kml file.
+
+      strcpy (fname, file.replace (".are", ".kml").toLatin1 ());
+
+      if ((fp = fopen (fname, "w")) == NULL)
+        {
+          QMessageBox::warning (this, tr ("geCache Error"), tr ("Cannot open area file %1").arg (file));
+          return;
+        }
+
+      fprintf (fp, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+      fprintf (fp, "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n");
+      fprintf (fp, "  <Document>\n");
+      fprintf (fp, "    <Style id=\"Transparent\">\n");
+      fprintf (fp, "      <LineStyle>\n");
+      fprintf (fp, "        <width>3</width>\n");
+      fprintf (fp, "      </LineStyle>\n");
+      fprintf (fp, "      <PolyStyle>\n");
+      fprintf (fp, "        <color>00000000</color>\n");
+      fprintf (fp, "        <outline>1</outline>\n");
+      fprintf (fp, "        <fill>0</fill>\n");
+      fprintf (fp, "      </PolyStyle>\n");
+      fprintf (fp, "    </Style>\n");
+
+
+      if (options.shape_tab == POLY_TAB && options.polygon.size ())
+        {
+          fprintf (fp, "    <Placemark>\n");
+          fprintf (fp, "      <name>%s</name>\n", area_name);
+          fprintf (fp, "      <styleUrl>#Transparent</styleUrl>\n");
+
+          fprintf (fp, "      <Polygon>\n");
+          fprintf (fp, "        <tessellate>1</tessellate>\n");
+          fprintf (fp, "        <altitudeMode>clampToGround</altitudeMode>\n");
+          fprintf (fp, "        <outerBoundaryIs>\n");
+          fprintf (fp, "          <LinearRing>\n");
+          fprintf (fp, "            <coordinates>\n");
+
+          for (uint32_t i = 0 ; i < options.polygon.size () ; i++)
+            {
+              //  Make sure we haven't created any duplicate points
+
+              if (i && options.polygon[i].x == options.polygon[i - 1].x && options.polygon[i].y == options.polygon[i - 1].y) continue;
+
+              fprintf (fp, "              %.11f,%.11f,10\n", options.polygon[i].x, options.polygon[i].y);
+            }
+
+          fprintf (fp, "              %.11f,%.11f,10\n", options.polygon[0].x, options.polygon[0].y);
+          fprintf (fp, "            </coordinates>\n");
+          fprintf (fp, "          </LinearRing>\n");
+          fprintf (fp, "        </outerBoundaryIs>\n");
+          fprintf (fp, "      </Polygon>\n");
+          fprintf (fp, "    </Placemark>\n");
+        }
+      else
+        {
+          fprintf (fp, "    <Placemark>\n");
+          fprintf (fp, "      <name>%s</name>\n", area_name);
+          fprintf (fp, "      <styleUrl>#Transparent</styleUrl>\n");
+          fprintf (fp, "      <Polygon>\n");
+          fprintf (fp, "        <extrude>1</extrude>\n");
+          fprintf (fp, "        <tessellate>1</tessellate>\n");
+          fprintf (fp, "        <altitudeMode>clampToGround</altitudeMode>\n");
+          fprintf (fp, "        <outerBoundaryIs>\n");
+          fprintf (fp, "          <LinearRing>\n");
+          fprintf (fp, "            <coordinates>\n");
+          fprintf (fp, "              %.11f,%.11f,10\n", options.cache_mbr.min_x, options.cache_mbr.min_y);
+          fprintf (fp, "              %.11f,%.11f,10\n", options.cache_mbr.min_x, options.cache_mbr.max_y);
+          fprintf (fp, "              %.11f,%.11f,10\n", options.cache_mbr.max_x, options.cache_mbr.max_y);
+          fprintf (fp, "              %.11f,%.11f,10\n", options.cache_mbr.max_x, options.cache_mbr.min_y);
+          fprintf (fp, "              %.11f,%.11f,10\n", options.cache_mbr.min_x, options.cache_mbr.min_y);
+          fprintf (fp, "            </coordinates>\n");
+          fprintf (fp, "          </LinearRing>\n");
+          fprintf (fp, "        </outerBoundaryIs>\n");
+          fprintf (fp, "      </Polygon>\n");
+          fprintf (fp, "    </Placemark>\n");
+        }
+
+      fprintf (fp, "  </Document>\n");
+      fprintf (fp, "</kml>\n");
+
+      fclose (fp);
 
       qApp->restoreOverrideCursor ();
     }

@@ -26,7 +26,7 @@
 
 #ifndef VERSION
 
-#define     VERSION     "PFM Software - geCache V1.02 - 04/25/17"
+#define     VERSION     "PFM Software - geCache V1.03 - 05/11/19"
 
 #endif
 
@@ -59,5 +59,13 @@
       with the saved cache directory.
     - Loads the bounds of the rectangle or polygon from an area file along with the saved cache directory.  This allows you to reload
       a cached area, modify the bounds, build the cache, and then save it to the same or a new name.
+
+
+    Version 1.03
+    Jan C. Depner (PFM Software)
+    05/11/19
+
+    - Now also saves the bounds of the rectangle or polygon to a kml file (in addition to the area (.are) file) along 
+      with the saved cache directory.
 
 </pre>*/
