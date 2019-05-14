@@ -62,7 +62,7 @@ uint8_t envin (OPTIONS *options)
 
   //  If the settings version has changed we need to leave the values at the new defaults since they may have changed.
 
-  if (settings_version != saved_version) return (NVFalse);
+  if (settings_version != saved_version) return (false);
 
 
   options->position_form = settings.value (QString ("position form"), options->position_form).toInt ();
@@ -126,7 +126,7 @@ uint8_t envin (OPTIONS *options)
   settings.endGroup ();
 
 
-  return (NVTrue);
+  return (true);
 }
 
 

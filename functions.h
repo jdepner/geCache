@@ -21,16 +21,13 @@
 *********************************************************************************************/
 
 
-#ifndef _NAVO_FUNCTIONS_H_
-#define _NAVO_FUNCTIONS_H_
+#ifndef _GECACHE_FUNCTIONS_H_
+#define _GECACHE_FUNCTIONS_H_
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-
-#define NVFalse 0
-#define NVTrue 1
 
 #define __STDC_FORMAT_MACROS
 #define __STDC_LIMIT_MACROS

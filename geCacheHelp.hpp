@@ -456,14 +456,14 @@ QString killBuildCacheText = geCache::tr
 
 QString saveCacheText = geCache::tr
   ("Build a new Google Earth disk cache based on the area and options set in the <b>Cache</b> tab.  The file dialog will actually ask for "
-   "an area (.are) file name instead of a cache directory name.  The cache directory will be created with the same name, sans suffix, as the area file.  The "
+   "an area (.kml) file name instead of a cache directory name.  The cache directory will be created with the same name, sans suffix, as the area file.  The "
    "area file will contain the bounds of the area to be cached (rectangle or polygon).<br><br>"
    "<b>IMPORTANT NOTE: This button will be disabled if you are running Google Earth to preview an area. "
    "Also, it would be a bad idea to press this button if you are running Google Earth standalone.</b>");
 
 QString loadCacheText = geCache::tr
   ("Load a saved Google Earth cache directory back to the Google Earth disk cache.  The file dialog will actually ask for "
-   "an area (.are) file name instead of the saved cache directory (which will have the same name, sans suffix, as the area file).  The "
+   "an area (.kml) file name instead of the saved cache directory (which will have the same name, sans suffix, as the area file).  The "
    "bounds of the area that was cached will be read from the area file and loaded into the rectangle and/or polygon definition "
    "slots in the GUI.  After loading the cache area and directory you can start Google Earth and then press the link button to "
    "zoom to the area.<br><br>"

@@ -26,7 +26,7 @@
 
 #ifndef VERSION
 
-#define     VERSION     "PFM Software - geCache V1.03 - 05/11/19"
+#define     VERSION     "PFM Software - geCache V1.04 - 05/13/19"
 
 #endif
 
@@ -67,5 +67,12 @@
 
     - Now also saves the bounds of the rectangle or polygon to a kml file (in addition to the area (.are) file) along 
       with the saved cache directory.
+
+
+    Version 1.04
+    Jan C. Depner (PFM Software)
+    05/13/19
+
+    - Got rid of the generic area (.are) file.  It was redundant after writing the kml area file.
 
 </pre>*/

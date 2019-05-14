@@ -36,7 +36,7 @@ uint8_t copyDir (const QString &source, const QString &dest)
 
       destDir.cdUp ();
 
-      if (!destDir.mkdir (QFileInfo (dest).fileName ())) return (NVFalse);
+      if (!destDir.mkdir (QFileInfo (dest).fileName ())) return (false);
 
       QDir sourceDir (source);
 
@@ -47,13 +47,13 @@ uint8_t copyDir (const QString &source, const QString &dest)
           const QString newSource = source + SEPARATOR + file;
           const QString newDest = dest + SEPARATOR + file;
 
-          if (!copyDir (newSource, newDest)) return (NVFalse);
+          if (!copyDir (newSource, newDest)) return (false);
         }
     }
   else
     {
-      if (!QFile::copy (source, dest)) return (NVFalse);
+      if (!QFile::copy (source, dest)) return (false);
     }
 
-  return (NVTrue);
+  return (true);
 }

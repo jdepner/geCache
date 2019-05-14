@@ -101,8 +101,8 @@ typedef struct
 {
   int32_t           process_id;                 //  This program's process ID
   char              version[128];               //  geCache version string
-  uint8_t           googleearth_available;      //  NVTrue if googleearth is available (and in the PATH)
-  uint8_t           ge_linked;                  //  NVTrue if geCache and Google Earth area linked
+  uint8_t           googleearth_available;      //  true if googleearth is available (and in the PATH)
+  uint8_t           ge_linked;                  //  true if geCache and Google Earth area linked
   int32_t           second_count;               //  Second counter for cache update
   double            box_size_x_deg;             //  Cache build viewing area box size in decimal degrees of longitude
   double            box_size_y_deg;             //  Cache build viewing area box size in decimal degrees of latitude

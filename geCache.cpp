@@ -58,14 +58,14 @@ geCache::geCache (QWidget *parent):
   googleEarthProc = NULL;
   buildGoogleEarthProc = NULL;
   build_direction = 0;
-  build_kill_flag = NVFalse;
-  build_start_flag = NVFalse;
+  build_kill_flag = false;
+  build_start_flag = false;
   bounds_clicked = NO_BOUNDS;
-  poly_define = NVFalse;
+  poly_define = false;
   poly_edit = 0;
   prev_clipboard_text = "";
-  restart_msg = NVFalse;
-  already_gone = NVFalse;
+  restart_msg = false;
+  already_gone = false;
   x_box_count = 0;
 
 
@@ -87,7 +87,7 @@ geCache::geCache (QWidget *parent):
 
   //  Set all of the defaults
 
-  set_defaults (&misc, &options, NVFalse);
+  set_defaults (&misc, &options, false);
 
 
   //  Get the user's defaults if available
@@ -109,9 +109,9 @@ geCache::geCache (QWidget *parent):
 
   //  Check to see if we have Google Earth.
 
-  misc.googleearth_available = NVTrue;
+  misc.googleearth_available = true;
   QString ge_exe = QStandardPaths::findExecutable (options.ge_name);
-  if (ge_exe.isEmpty ()) misc.googleearth_available = NVFalse;
+  if (ge_exe.isEmpty ()) misc.googleearth_available = false;
 
 
 
@@ -1088,7 +1088,7 @@ geCache::slotGeCacheTimer ()
 
       if (!build_start_flag || misc.second_count > 40)
         {
-          build_start_flag = NVFalse;
+          build_start_flag = false;
 
           if ((misc.second_count / 2) >= options.cache_update_frequency)
             {
@@ -1152,7 +1152,7 @@ geCache::slotGeCacheTimer ()
 
                           int32_t poly_size = (int32_t) options.polygon.size ();
 
-                          if (!polygon_intersection (mbr_poly, 4, options.polygon.data (), poly_size)) misc.view_flag = NVFalse;
+                          if (!polygon_intersection (mbr_poly, 4, options.polygon.data (), poly_size)) misc.view_flag = false;
                         }
 
 
@@ -1534,11 +1534,11 @@ geCache::slotPolyClicked ()
 
   if (options.polygon.size ())
     {
-      poly_edit = NVTrue;
+      poly_edit = true;
     }
   else
     {
-      poly_define = NVTrue;
+      poly_define = true;
     }
 
 
@@ -1550,7 +1550,7 @@ geCache::slotPolyClicked ()
 void 
 geCache::slotClosePolyClicked ()
 {
-  poly_define = NVFalse;
+  poly_define = false;
 
 
   setWidgetStates ();
@@ -1568,7 +1568,7 @@ geCache::slotClosePolyClicked ()
 void 
 geCache::slotClearPolyClicked ()
 {
-  poly_define = NVFalse;
+  poly_define = false;
   options.polygon.clear ();
   vertices->clear ();
 
@@ -1754,7 +1754,7 @@ geCache::slotGoogleEarthClicked (bool checked)
     {
       //  Google Earth should be unlinked for cache preview.
 
-      misc.ge_linked = NVFalse;
+      misc.ge_linked = false;
 
       bGoogleEarthLink->setChecked (false);
 
@@ -1765,8 +1765,8 @@ geCache::slotGoogleEarthClicked (bool checked)
       arguments.clear ();
 
 
-      QString tmp0 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_link.kml").arg (misc.process_id);
-      QString tmp1 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_look.kml").arg (misc.process_id);
+      QString tmp0 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%1_tmp_link.kml").arg (misc.process_id);
+      QString tmp1 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%1_tmp_look.kml").arg (misc.process_id);
 
       strcpy (ge_tmp_name[0], tmp0.toLatin1 ());
       strcpy (ge_tmp_name[1], tmp1.toLatin1 ());
@@ -1917,7 +1917,7 @@ geCache::killGoogleEarth ()
   googleEarthProc = NULL;
 
 
-  misc.ge_linked = NVFalse;
+  misc.ge_linked = false;
 
 
   bGoogleEarthLink->setChecked (false);
@@ -2043,7 +2043,7 @@ geCache::positionBuildGoogleEarth ()
 
 
   //  If we're doing a polygon build, we only want to change the file if the current box overlaps the polygon.  The flag will always be 
-  //  set to NVTrue for rectangle builds.
+  //  set to true for rectangle builds.
 
   if (misc.view_flag)
     {
@@ -2150,8 +2150,8 @@ geCache::positionBuildGoogleEarth ()
 
               if (misc.view_area_mbr.min_y >= misc.build_area_mbr.max_y)
                 {
-                  build_kill_flag = NVTrue;
-                  misc.view_flag = NVTrue;
+                  build_kill_flag = true;
+                  misc.view_flag = true;
                 }
               else
                 {
@@ -2193,8 +2193,8 @@ geCache::positionBuildGoogleEarth ()
 
               if (misc.view_area_mbr.min_y >= misc.build_area_mbr.max_y)
                 {
-                  build_kill_flag = NVTrue;
-                  misc.view_flag = NVTrue;
+                  build_kill_flag = true;
+                  misc.view_flag = true;
                 }
               else
                 {
@@ -2337,8 +2337,8 @@ geCache::slotBuildCache ()
       arguments.clear ();
 
 
-      QString tmp0 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_build_link.kml").arg (misc.process_id);
-      QString tmp1 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%d_tmp_build_look.kml").arg (misc.process_id);
+      QString tmp0 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%1_tmp_build_link.kml").arg (misc.process_id);
+      QString tmp1 = QDir::tempPath () + SEPARATOR + QString ("geCache_GE_%1_tmp_build_look.kml").arg (misc.process_id);
 
       strcpy (build_ge_tmp_name[0], tmp0.toLatin1 ());
       strcpy (build_ge_tmp_name[1], tmp1.toLatin1 ());
@@ -2451,7 +2451,7 @@ geCache::slotBuildCache ()
       qApp->restoreOverrideCursor ();
 
       misc.second_count = 0;
-      build_start_flag = NVTrue;
+      build_start_flag = true;
 
 
       //  We need a snapshot of the newly created cache directory in case we max out the current one.  We'll pause here for a few seconds to
@@ -2550,7 +2550,7 @@ geCache::killBuildGoogleEarth ()
   buildGoogleEarthProc = NULL;
 
   build_direction = 0;
-  build_kill_flag = NVFalse;
+  build_kill_flag = false;
 
   progBox->setTitle (tr ("Cache build progress"));
 
@@ -2707,7 +2707,7 @@ geCache::slotSaveCacheClicked ()
       copyDir (options.ge_dir, save_dir);
 
 
-      //  Save the rectangle or polygon to the area file.
+      //  Save the rectangle or polygon to the kml file.
 
       QString areaName = QFileInfo (file).baseName ();
       char area_name[256];
@@ -2715,39 +2715,7 @@ geCache::slotSaveCacheClicked ()
 
       FILE *fp;
       char fname[1024];
-      strcpy (fname, file.append (".are").toLatin1 ());
-
-      if ((fp = fopen (fname, "w")) == NULL)
-        {
-          QMessageBox::warning (this, tr ("geCache Error"), tr ("Cannot open area file %1").arg (file));
-          return;
-        }
-
-      if (options.shape_tab == POLY_TAB && options.polygon.size ())
-        {
-          for (uint32_t i = 0 ; i < options.polygon.size () ; i++)
-            {
-              //  Make sure we haven't created any duplicate points
-
-              if (i && options.polygon[i].x == options.polygon[i - 1].x && options.polygon[i].y == options.polygon[i - 1].y) continue;
-
-              fprintf (fp, "%.11f, %.11f\n", options.polygon[i].y, options.polygon[i].x);
-            }
-        }
-      else
-        {
-          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.min_y, options.cache_mbr.min_x);
-          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.max_y, options.cache_mbr.min_x);
-          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.max_y, options.cache_mbr.max_x);
-          fprintf (fp, "%.11f, %.11f\n", options.cache_mbr.min_y, options.cache_mbr.max_x);
-        }
-
-      fclose (fp);
-
-
-      //  Save the rectangle or polygon to the kml file.
-
-      strcpy (fname, file.replace (".are", ".kml").toLatin1 ());
+      strcpy (fname, file.append ("_geCache.kml").toLatin1 ());
 
       if ((fp = fopen (fname, "w")) == NULL)
         {
@@ -2773,7 +2741,7 @@ geCache::slotSaveCacheClicked ()
       if (options.shape_tab == POLY_TAB && options.polygon.size ())
         {
           fprintf (fp, "    <Placemark>\n");
-          fprintf (fp, "      <name>%s</name>\n", area_name);
+          fprintf (fp, "      <name>%s (polygon)</name>\n", area_name);
           fprintf (fp, "      <styleUrl>#Transparent</styleUrl>\n");
 
           fprintf (fp, "      <Polygon>\n");
@@ -2802,7 +2770,7 @@ geCache::slotSaveCacheClicked ()
       else
         {
           fprintf (fp, "    <Placemark>\n");
-          fprintf (fp, "      <name>%s</name>\n", area_name);
+          fprintf (fp, "      <name>%s (rectangle)</name>\n", area_name);
           fprintf (fp, "      <styleUrl>#Transparent</styleUrl>\n");
           fprintf (fp, "      <Polygon>\n");
           fprintf (fp, "        <extrude>1</extrude>\n");
@@ -2871,75 +2839,46 @@ geCache::slotLoadCacheClicked ()
       QString load_dir = file;
 
 
-      //  Since version 1.02 geCache writes an area file that is associated with the saved cache directory.  If one is there, we need to 
+      //  Since version 1.03 geCache writes a kml area file that is associated with the saved cache directory.  If one is there, we need to 
       //  read it and get the rectangle or polygon from the area file.
 
       FILE *fp;
       char fname[1024], str[128];
-      strcpy (fname, file.append (".are").toLatin1 ());
+      strcpy (fname, file.append ("_geCache.kml").toLatin1 ());
+      uint8_t rect_flag = false, start_coords = 0;
 
       if ((fp = fopen (fname, "r")) != NULL)
         {
           options.polygon.clear ();
           while (fgets (str, sizeof (str), fp) != NULL)
             {
-              double lat_degs, lon_degs;
-
-              sscanf (str, "%lf, %lf", &lat_degs, &lon_degs);
-
-              NV_F64_COORD2 pnt = {lon_degs, lat_degs};
-              options.polygon.push_back (pnt);
-            }
+              QString strng = QString (str);
 
 
-          uint8_t rect_flag = NVFalse;
+              //  First look for the name to see if it is a polygon (default) or a rectangle.
 
-          if (options.polygon.size () == 4)
-            {
-              double ulat[4], ulon[4];
-              int32_t lat_count = 0, lon_count = 0;
-
-              for (int32_t j = 0 ; j < 4 ; j++)
+              if (strng.contains ("<name>"))
                 {
-                  uint8_t unique = NVTrue;
-
-                  for (int32_t k = 0 ; k < lat_count ; k++)
-                    {
-                      if (options.polygon[j].y == ulat[k])
-                        {
-                          unique = NVFalse;
-                          break;
-                        }
-                    }
-
-                  if (unique)
-                    {
-                      ulat[lat_count] = options.polygon[j].y;
-                      lat_count++;
-                    }
-
-
-                  unique = NVTrue;
-                  for (int32_t k = 0 ; k < lon_count ; k++)
-                    {
-                      if (options.polygon[j].x == ulon[k])
-                        {
-                          unique = NVFalse;
-                          break;
-                        }
-                    }
-
-                  if (unique)
-                    {
-                      ulon[lon_count] = options.polygon[j].x;
-                      lon_count++;
-                    }
+                  if (strng.contains ("rectangle")) rect_flag = true;
                 }
+              else if (strng.contains ("<coordinates>"))
+                {
+                  start_coords = 1;
+                }
+              else if (strng.contains ("</coordinates>"))
+                {
+                  break;
+                }
+              else if (start_coords)
+                {
+                  double lat_degs, lon_degs;
+                  float elev;
 
+                  sscanf (str, "%lf,%lf,%f", &lon_degs, &lat_degs, &elev);
 
-              //  If there are only two unique latitudes and two unique longitudes then this is a rectangle.
-
-              if (lat_count == 2 && lon_count == 2) rect_flag = NVTrue;
+                  NV_F64_COORD2 pnt = {lon_degs, lat_degs};
+                  options.polygon.push_back (pnt);
+                }
             }
 
           fclose (fp);
@@ -3150,11 +3089,11 @@ geCache::slotGeNameEditingFinished ()
 {
   options.ge_name = geName->text ();
 
-  misc.googleearth_available = NVTrue;
+  misc.googleearth_available = true;
   QString ge_exe = QStandardPaths::findExecutable (options.ge_name);
   if (ge_exe.isEmpty ())
     {
-      misc.googleearth_available = NVFalse;
+      misc.googleearth_available = false;
 
       QMessageBox::warning (this, tr ("geCache"),
                             tr ("Can't find Google Earth (%1) in your PATH.  Make sure the <b>Google Earth Name</b> field in the ").arg (options.ge_name) +
@@ -3284,7 +3223,7 @@ geCache::slotQuit ()
 
   //  We don't want the closeEvent (above) to call slotQuit again if we're closing normally.
 
-  already_gone = NVTrue;
+  already_gone = true;
 
 
   close ();

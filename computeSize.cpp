@@ -33,8 +33,8 @@ void computeSize (MISC *misc, OPTIONS *options)
 
   //  Set the default flag for positionBuildGoogleEarth.
 
-  misc->view_flag = NVTrue;
-  misc->poly_flag = NVFalse;
+  misc->view_flag = true;
+  misc->poly_flag = false;
 
 
   /******************************************************** Rectangle ********************************************************************/
@@ -91,7 +91,7 @@ void computeSize (MISC *misc, OPTIONS *options)
   //  Figure out how many iterations it will take to do the build so that we can set up a progress bar.
 
   misc->iterations = 1;
-  uint8_t done = NVFalse, direction = 0;
+  uint8_t done = false, direction = 0;
   NV_F64_XYMBR test_mbr = misc->view_area_mbr;
 
   do
@@ -123,7 +123,7 @@ void computeSize (MISC *misc, OPTIONS *options)
 
               if (test_mbr.min_y >= misc->build_area_mbr.max_y)
                 {
-                  done = NVTrue;
+                  done = true;
                 }
               else
                 {
@@ -158,7 +158,7 @@ void computeSize (MISC *misc, OPTIONS *options)
 
               if (test_mbr.min_y >= misc->build_area_mbr.max_y)
                 {
-                  done = NVTrue;
+                  done = true;
                 }
               else
                 {
@@ -196,7 +196,7 @@ void computeSize (MISC *misc, OPTIONS *options)
 
   if (options->shape_tab == POLY_TAB && options->polygon.size ())
     {
-      misc->poly_flag = NVTrue;
+      misc->poly_flag = true;
 
 
       //  Compute the build MBR based on the cache area polygon.
@@ -253,7 +253,7 @@ void computeSize (MISC *misc, OPTIONS *options)
       misc->view_area_mbr.max_x = misc->view_area_mbr.min_x + misc->box_size_x_deg;
 
 
-      //  We need to set misc->view_flag to NVFalse if the first box is completely out of the polygon.
+      //  We need to set misc->view_flag to false if the first box is completely out of the polygon.
 
       NV_F64_COORD2 mbr_poly[4];
 
@@ -268,13 +268,13 @@ void computeSize (MISC *misc, OPTIONS *options)
 
       int32_t poly_size = (int32_t) options->polygon.size ();
 
-      if (!polygon_intersection (mbr_poly, 4, options->polygon.data (), poly_size)) misc->view_flag = NVFalse;
+      if (!polygon_intersection (mbr_poly, 4, options->polygon.data (), poly_size)) misc->view_flag = false;
 
 
       //  Figure out how many iterations it will take to do the build so that we can set up a progress bar.
 
       misc->poly_iterations = 1;
-      uint8_t done = NVFalse, direction = 0;
+      uint8_t done = false, direction = 0;
       NV_F64_XYMBR test_mbr = misc->view_area_mbr;
 
 
@@ -329,7 +329,7 @@ void computeSize (MISC *misc, OPTIONS *options)
 
                   if (test_mbr.min_y >= misc->build_area_mbr.max_y)
                     {
-                      done = NVTrue;
+                      done = true;
                     }
                   else
                     {
@@ -364,7 +364,7 @@ void computeSize (MISC *misc, OPTIONS *options)
 
                   if (test_mbr.min_y >= misc->build_area_mbr.max_y)
                     {
-                      done = NVTrue;
+                      done = true;
                     }
                   else
                     {

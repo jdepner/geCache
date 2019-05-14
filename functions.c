@@ -226,7 +226,7 @@ int32_t line_intersection (double x1, double y1, double x2, double y2, double x3
                         poly2        - second polygon
                         poly2_count  - vertex count for second polygon
 
-  - Return Value:       NVTrue if they intersect, otherwise NVFalse
+  - Return Value:       1 if they intersect, otherwise 0
 
 ****************************************************************************/
 
@@ -240,7 +240,7 @@ uint8_t polygon_intersection (NV_F64_COORD2 *poly1, int32_t poly1_count, NV_F64_
 
   for (i = 0 ; i < poly1_count ; i++)
     {
-      if (inside_polygon (poly2, poly2_count, poly1[i].x, poly1[i].y)) return (NVTrue);
+      if (inside_polygon (poly2, poly2_count, poly1[i].x, poly1[i].y)) return (1);
     }
 
 
@@ -248,7 +248,7 @@ uint8_t polygon_intersection (NV_F64_COORD2 *poly1, int32_t poly1_count, NV_F64_
 
   for (i = 0 ; i < poly2_count ; i++)
     {
-      if (inside_polygon (poly1, poly1_count, poly2[i].x, poly2[i].y)) return (NVTrue);
+      if (inside_polygon (poly1, poly1_count, poly2[i].x, poly2[i].y)) return (1);
     }
 
 
@@ -259,7 +259,7 @@ uint8_t polygon_intersection (NV_F64_COORD2 *poly1, int32_t poly1_count, NV_F64_
       for (j = 1 ; j < poly2_count ; j++)
         {
           if (line_intersection (poly1[i - 1].x, poly1[i - 1].y, poly1[i].x, poly1[i].y, poly2[j - 1].x, poly2[j - 1].y, poly2[j].x, poly2[j].y, &x, &y) == 2)
-            return (NVTrue);
+            return (1);
         }
     }
 
@@ -269,7 +269,7 @@ uint8_t polygon_intersection (NV_F64_COORD2 *poly1, int32_t poly1_count, NV_F64_
   for (i = 1 ; i < poly1_count ; i++)
     {
       if (line_intersection (poly1[i - 1].x, poly1[i - 1].y, poly1[i].x, poly1[i].y, poly2[poly2_count - 1].x, poly2[poly2_count - 1].y,
-                             poly2[0].x, poly2[0].y, &x, &y) == 2) return (NVTrue);
+                             poly2[0].x, poly2[0].y, &x, &y) == 2) return (1);
     }
       
 
@@ -278,19 +278,19 @@ uint8_t polygon_intersection (NV_F64_COORD2 *poly1, int32_t poly1_count, NV_F64_
   for (i = 1 ; i < poly2_count ; i++)
     {
       if (line_intersection (poly2[i - 1].x, poly2[i - 1].y, poly2[i].x, poly2[i].y, poly1[poly1_count - 1].x, poly1[poly1_count - 1].y,
-                             poly1[0].x, poly1[0].y, &x, &y) == 2) return (NVTrue);
+                             poly1[0].x, poly1[0].y, &x, &y) == 2) return (1);
     }
       
 
   /*  Finally, we check the closing segments against each other.  */
 
   if (line_intersection (poly2[poly2_count - 1].x, poly2[poly2_count - 1].y, poly2[0].x, poly2[0].y, poly1[poly1_count - 1].x, poly1[poly1_count - 1].y,
-                         poly1[0].x, poly1[0].y, &x, &y) == 2) return (NVTrue);
+                         poly1[0].x, poly1[0].y, &x, &y) == 2) return (1);
 
 
   /*  If we got here there is no intersection.  */
 
-  return (NVFalse);
+  return (0);
 }
 
 
