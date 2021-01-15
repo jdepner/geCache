@@ -895,7 +895,7 @@ void geCache::getClipboard ()
 
 
   QString text = clipboard->text ().simplified ();
-
+  
 
   //  If there aren't two degree symbols then something else got slapped into the clipboard.
 
@@ -1077,7 +1077,7 @@ geCache::slotGeCacheTimer ()
   //  I'm using this instead of the "changed" signal (since it doesn't work on Windows).  Basically, the user clicked one of the bounds buttons on the Cache
   //  tab so corner_clicked got set to 1 = NW, 2 = NE, 3 = SW, or 4 = SE.
 
-  if (bounds_clicked) getClipboard ();
+  if (bounds_clicked != NO_BOUNDS) getClipboard ();
 
 
   //  If a cache build is running...
@@ -1315,7 +1315,7 @@ geCache::slotBoundsClicked (int id)
     {
       bounds_clicked = NO_BOUNDS;
     }
-
+  
 
   setWidgetStates ();
 }

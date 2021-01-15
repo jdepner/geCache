@@ -26,7 +26,7 @@
 
 #ifndef VERSION
 
-#define     VERSION     "PFM Software - geCache V1.04 - 05/13/19"
+#define     VERSION     "PFM Software - geCache V1.05 - 01/15/21"
 
 #endif
 
@@ -74,5 +74,13 @@
     05/13/19
 
     - Got rid of the generic area (.are) file.  It was redundant after writing the kml area file.
+
+
+    Version 1.05
+    Jan C. Depner (PFM Software)
+    01/15/21
+
+    - Fixed the NW corner button.  I wasn't checking for bounds_clicked = NO_BOUNDS, I was checking
+      for bounds_clicked being non-zero.  NW corner is zero, DOH!
 
 </pre>*/
