@@ -5,8 +5,8 @@
 
 rm -f qrc_icons.cpp geCache.pro Makefile
 
-qmake -project -o geCache.tmp
-cat >geCache.pro <<EOF
+qmake -project -o geCache
+cat >geCache.tmp <<EOF
 RC_FILE = geCache.rc
 RESOURCES = icons.qrc
 QT += widgets
@@ -14,8 +14,8 @@ CONFIG += console
 EOF
 
 
-cat geCache.tmp >>geCache.pro
-rm geCache.tmp
+cat geCache.pro >>geCache.tmp
+mv geCache.tmp geCache.pro
 
 
 # Building the Makefile file using qmake

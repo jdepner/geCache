@@ -374,12 +374,15 @@ void qPosfix (QString string, double *degs, int32_t type)
     {
     case 2:
       fsec = f3 / 3600.0;
+      __attribute__ ((fallthrough));
 
     case 1:
       fmin = f2 / 60.0;
+      __attribute__ ((fallthrough));
 
     case 0:
       fdeg = f1;
+      break;
     }
 
   fdeg += fmin + fsec;
